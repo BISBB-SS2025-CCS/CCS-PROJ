@@ -1,0 +1,84 @@
+<%- include('partials/header', { title: 'Incidents' }) %>
+
+<% if (typeof username !== 'undefined' && username) { %>
+    <nav class="main-nav">
+        <span>Willkommen, <%= username %>!</span>
+        <a href="/auth/logout">Logout</a>
+    </nav>
+<% } %>
+
+<div class="container">
+    <% if (typeof message !== 'undefined' && message) { %>
+        <div class="alert <%= message.toLowerCase().includes('fehler') || message.toLowerCase().includes('pflichtfeld') ? 'alert-danger' : 'alert-success' %>">
+            <%= message %>
+        </div>
+    <% } %>
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+    <% } %>
+
+    <section class="incident-form-section">
+        <h3>Neuen Incident erstellen</h3>
+        <form action="/incidents" method="POST" class="form">
+            <div class="form-group">
+                <label for="date">Datum (optional, Standard ist jetzt):</label>
+                <input type="datetime-local" id="date" name="date" value="<%= new Date().toISOString().substring(0, 16) %>">
+            </div>
+            <div class="form-group">
+                <label for="title">Titel:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="reporter">Gemeldet von:</label>
+                <input type="text" id="reporter" name="reporter" value="<%= typeof username !== 'undefined' ? username : '' %>">
+            </div>
+            <div class="form-group">
+                <label for="type">Typ:</label>
+                <select id="type" name="type">
+                    <option value="">-- Typ auswählen --</option>
+                    <option value="Hardware">Hardware</option>
+                    <option value="Software">Software</option>
+                    <option value="Netzwerk">Netzwerk</option>
+                    <option value="Sicherheit">Sicherheit</option>
+                    <option value="Anfrage">Anfrage</option>
+                    <option value="Sonstiges">Sonstiges</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="description">Beschreibung:</label>
+                <textarea id="description" name="description" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="resourceId">Ressourcen-ID (z.B. Servername, Asset-Tag):</label>
+                <input type="text" id="resourceId" name="resourceId">
+            </div>
+            <button type="submit" class="btn">Incident erstellen</button>
+        </form>
+    </section>
+
+    <section class="incident-list-section">
+        <h3>Vorhandene Incidents</h3>
+        <% if (incidents && incidents.length > 0) { %>
+            <ul class="incident-list">
+                <% incidents.forEach(incident => { %>
+                    <li class="incident-item">
+                        <h4><%= incident.title %></h4>
+                        <p class="meta"><strong>Datum:</strong> <%= new Date(incident.date).toLocaleString('de-DE', { dateStyle: 'medium', timeStyle: 'short' }) %></p>
+                        <p class="meta"><strong>Gemeldet von:</strong> <%= incident.reporter || 'N/A' %></p>
+                        <p class="meta"><strong>Typ:</strong> <%= incident.type || 'N/A' %></p>
+                        <p><strong>Beschreibung:</strong><br><%= incident.description.replace(/\n/g, '<br>') %></p>
+                        <p class="meta"><strong>Ressourcen-ID:</strong> <%= incident.resource_id || 'N/A' %></p>
+                        <p class="meta"><i>Erstellt: <%= new Date(incident.created_at).toLocaleString('de-DE') %>, Zuletzt aktualisiert: <%= new Date(incident.updated_at).toLocaleString('de-DE') %></i></p>
+                        <form action="/incidents/delete/<%= incident.id %>" method="POST" onsubmit="return confirm('Sind Sie sicher, dass Sie diesen Incident löschen möchten?');">
+                            <button type="submit" class="btn btn-danger">Löschen</button>
+                        </form>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <p>Keine Incidents gefunden.</p>
+        <% } %>
+    </section>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,32 @@
+#for local testing
+#docker-compose up -d
+#docker exec -it postgres_db psql -U postgres_user -d incident_db
+
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest # Sie können hier eine spezifische Version angeben, z.B. postgres:15
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: ${PG_USER:-postgres_user}
+      POSTGRES_PASSWORD: ${PG_PASSWORD:-your_secure_password}
+      POSTGRES_DB: ${PG_DATABASE:-incident_db}
+    ports:
+      - "${PG_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:latest # Sie können hier eine spezifische Version angeben, z.B. redis:7
+    container_name: redis_cache
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
