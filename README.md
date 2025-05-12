@@ -1,7 +1,7 @@
-#befehl um redis und postgre LOKAL zu starten für dev/testing:
+# befehl um redis und postgre LOKAL zu starten für dev/testing:
 docker-compose up -d
 
-#verbindung zur postgres_db:
+# verbindung zur postgres_db:
 docker exec -it postgres_db psql -U postgres_user -d incident_db
 
 #damits funktioniert muss auch ein .env erstellt werden, etwaige pws und user anpassen:
