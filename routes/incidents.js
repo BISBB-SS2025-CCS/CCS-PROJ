@@ -3,7 +3,6 @@ const express = require('express');
 const db = require('../services/db');
 const redisClient = require('../services/cache');
 const { isAuthenticated } = require('./auth'); // Authentifizierungs-Middleware importieren
-const fetch = require('node-fetch'); // Node.js native fetch can also be used in newer versions
 
 const router = express.Router();
 
@@ -127,7 +126,7 @@ router.post('/escalate/:id', async (req, res) => {
 
         console.log(`Eskaliere Incident ${id} mit Ressourcen-ID ${incident.resource_id} an ${serverlessEndpoint}`);
 
-        // Make the POST request to the serverless endpoint
+        // Make the POST request to the serverless endpoint using the global fetch
         const response = await fetch(serverlessEndpoint, {
             method: 'POST',
             headers: {
