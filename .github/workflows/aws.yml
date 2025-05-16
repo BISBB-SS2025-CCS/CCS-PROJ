@@ -35,9 +35,9 @@ env:
   ECR_REPOSITORY: 156916663523.dkr.ecr.eu-north-1.amazonaws.com/ccs/app           # set this to your Amazon ECR repository name
   ECS_SERVICE: arn:aws:ecs:eu-north-1:156916663523:service/css-application-sims/ccs-deployment-service-chh3qrla                 # set this to your Amazon ECS service name
   ECS_CLUSTER: arn:aws:ecs:eu-north-1:156916663523:cluster/css-application-sims                 # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: MY_ECS_TASK_DEFINITION # set this to the path to your Amazon ECS task definition
+  ECS_TASK_DEFINITION: arn:aws:ecs:eu-north-1:156916663523:task-definition/ccs-deployment:1 # set this to the path to your Amazon ECS task definition
                                                # file, e.g. .aws/task-definition.json
-  CONTAINER_NAME: MY_CONTAINER_NAME           # set this to the name of the container in the
+  CONTAINER_NAME: ccs-application           # set this to the name of the container in the
                                                # containerDefinitions section of your task definition
 
 permissions:
