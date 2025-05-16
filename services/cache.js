@@ -10,7 +10,7 @@ if (process.env.APP_REDIS_CONNECTION_STRING) {
     redisURL = process.env.APP_REDIS_CONNECTION_STRING;
     redisClientOptions.url = redisURL;
     // Assuming password is part of the connection string if used this way
-    console.log('Using APP_REDIS_CONNECTION_STRING for Redis connection.');
+    console.log('Using APP_REDIS_CONNECTION_STRING for Redis connection:' + redisURL);
 } else {
     // Fallback to local development configuration
     redisURL = `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`;
