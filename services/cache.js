@@ -2,35 +2,26 @@
 const redis = require('redis');
 require('dotenv').config(); // Stellt sicher, dass .env geladen wird
 
-const isProduction = process.env.NODE_ENV === 'production';
-
-// KORREKTE DEFINITION DER redisURL
+// Try to use the connection string from the environment variable first
 let redisURL;
-if (isProduction) {
-    // Für AWS ElastiCache (Beispiel, passen Sie dies an Ihre Endpunkt-Struktur an)
-    // Falls Ihr ElastiCache-Endpunkt bereits 'redis://' enthält, entfernen Sie es hier
-    if (process.env.ELASTICACHE_REDIS_ENDPOINT && process.env.ELASTICACHE_REDIS_ENDPOINT.startsWith('redis://')) {
-        redisURL = `${process.env.ELASTICACHE_REDIS_ENDPOINT}:${process.env.ELASTICACHE_REDIS_PORT}`;
-    } else {
-        redisURL = `redis://${process.env.ELASTICACHE_REDIS_ENDPOINT}:${process.env.ELASTICACHE_REDIS_PORT}`;
-    }
+let redisClientOptions = {};
+
+if (process.env.APP_REDIS_CONNECTION_STRING) {
+    redisURL = process.env.APP_REDIS_CONNECTION_STRING;
+    redisClientOptions.url = redisURL;
+    // Assuming password is part of the connection string if used this way
+    console.log('Using APP_REDIS_CONNECTION_STRING for Redis connection.');
 } else {
-    // Für lokale Entwicklung
+    // Fallback to local development configuration
     redisURL = `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`;
+    redisClientOptions.url = redisURL;
+    if (process.env.REDIS_PASSWORD) {
+        redisClientOptions.password = process.env.REDIS_PASSWORD;
+    }
+    console.log('APP_REDIS_CONNECTION_STRING not set, falling back to local Redis config.');
 }
 
 console.log(`Attempting to connect to Redis with URL: ${redisURL}`); // Hinzugefügt für Debugging
-
-const redisClientOptions = {
-    url: redisURL // Die korrigierte URL wird hier verwendet
-};
-
-// Passwort-Handling (unverändert von Ihrem vorherigen Code, aber wichtig)
-if (isProduction && process.env.ELASTICACHE_REDIS_PASSWORD) {
-    redisClientOptions.password = process.env.ELASTICACHE_REDIS_PASSWORD;
-} else if (!isProduction && process.env.REDIS_PASSWORD) {
-    redisClientOptions.password = process.env.REDIS_PASSWORD;
-}
 
 
 const redisClient = redis.createClient(redisClientOptions);

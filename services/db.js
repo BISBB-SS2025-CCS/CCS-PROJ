@@ -4,14 +4,31 @@ require('dotenv').config(); // Um .env-Variablen zu laden
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-const connectionConfig = {
-    user: isProduction ? process.env.RDS_USERNAME : process.env.PG_USER,
-    host: isProduction ? process.env.RDS_HOSTNAME : process.env.PG_HOST,
-    database: isProduction ? process.env.RDS_DB_NAME : process.env.PG_DATABASE,
-    password: isProduction ? process.env.RDS_PASSWORD : process.env.PG_PASSWORD,
-    port: isProduction ? parseInt(process.env.RDS_PORT || '5432') : parseInt(process.env.PG_PORT || '5432'),
-    ssl: isProduction ? { rejectUnauthorized: false } : false // Für AWS RDS SSL, lokal meist nicht nötig
-};
+let connectionConfig;
+
+if (isProduction) {
+    // Use a single connection string from environment variable for production
+    if (!process.env.DATABASE_URL) {
+        console.error("DATABASE_URL environment variable is not set for production!");
+        process.exit(1); // Exit if critical variable is missing
+    }
+    connectionConfig = {
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false // Often needed for cloud databases like RDS
+        }
+    };
+} else {
+    // Use separate environment variables for local development
+    connectionConfig = {
+        user: process.env.PG_USER,
+        host: process.env.PG_HOST,
+        database: process.env.PG_DATABASE,
+        password: process.env.PG_PASSWORD,
+        port: parseInt(process.env.PG_PORT || '5432'),
+        ssl: false // Not needed for local development
+    };
+}
 
 const pool = new Pool(connectionConfig);
 
