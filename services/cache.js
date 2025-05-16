@@ -7,7 +7,7 @@ let redisURL;
 let redisClientOptions = {};
 
 if (process.env.APP_REDIS_CONNECTION_STRING) {
-    redisURL = process.env.APP_REDIS_CONNECTION_STRING;
+    redisURL = `redis://`+process.env.APP_REDIS_CONNECTION_STRING;
     redisClientOptions.url = redisURL;
     // Assuming password is part of the connection string if used this way
     console.log('Using APP_REDIS_CONNECTION_STRING for Redis connection:' + redisURL);
