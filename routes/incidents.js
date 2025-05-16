@@ -3,6 +3,7 @@ const express = require('express');
 const db = require('../services/db');
 const redisClient = require('../services/cache');
 const { isAuthenticated } = require('./auth'); // Authentifizierungs-Middleware importieren
+const fetch = require('node-fetch'); // Node.js native fetch can also be used in newer versions
 
 const router = express.Router();
 
@@ -93,6 +94,62 @@ router.post('/delete/:id', async (req, res) => {
     } catch (err) {
         console.error('Fehler beim Löschen des Incidents:', err);
         res.status(500).redirect('/incidents?message=Fehler beim Löschen des Incidents.');
+    }
+});
+
+// POST Incident eskalieren
+router.post('/escalate/:id', async (req, res) => {
+    const { id } = req.params;
+    const serverlessEndpoint = process.env.SERVERLESS_ENDPOINT;
+
+    if (!serverlessEndpoint) {
+        console.error('SERVERLESS_ENDPOINT environment variable is not set.');
+        return res.status(500).redirect('/incidents?message=Fehler: Serverless-Endpunkt nicht konfiguriert.');
+    }
+
+    try {
+        // Get the incident details from the database to retrieve resource_id
+        const result = await db.query('SELECT resource_id FROM incidents WHERE id = $1', [id]);
+        const incident = result.rows[0];
+
+        if (!incident) {
+            return res.status(404).redirect('/incidents?message=Incident nicht gefunden.');
+        }
+
+        if (!incident.resource_id) {
+             return res.status(400).redirect('/incidents?message=Incident hat keine Ressourcen-ID zum Eskalieren.');
+        }
+
+        // Prepare the payload
+        const payload = {
+            resourceId: incident.resource_id
+        };
+
+        console.log(`Eskaliere Incident ${id} mit Ressourcen-ID ${incident.resource_id} an ${serverlessEndpoint}`);
+
+        // Make the POST request to the serverless endpoint
+        const response = await fetch(serverlessEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // Add any necessary authentication headers here if required by your serverless function
+                // 'Authorization': `Bearer ${process.env.SERVERLESS_API_KEY}`
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`Fehler beim Aufruf des Serverless-Endpunkts: ${response.status} ${response.statusText}`, errorText);
+            return res.status(response.status).redirect(`/incidents?message=Fehler beim Eskalieren des Incidents: ${response.statusText}`);
+        }
+
+        console.log('Incident erfolgreich eskaliert.');
+        res.redirect('/incidents?message=Incident erfolgreich eskaliert!');
+
+    } catch (err) {
+        console.error('Fehler beim Eskalieren des Incidents:', err);
+        res.status(500).redirect('/incidents?message=Ein Fehler ist beim Eskalieren des Incidents aufgetreten.');
     }
 });
 
