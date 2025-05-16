@@ -118,7 +118,7 @@ router.post('/escalate/:id', async (req, res) => {
         if (!incident.resource_id) {
              return res.status(400).redirect('/incidents?message=Incident hat keine Ressourcen-ID zum Eskalieren.');
         }
-
+        //tescommit
         // Prepare the payload
         const payload = {
             resourceId: incident.resource_id
