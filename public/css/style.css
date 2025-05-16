@@ -3,9 +3,13 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f0f2f5;
+    /* background-color: #f0f2f5; */
+    background: linear-gradient(to bottom, #e0f7fa, #b2ebf2); /* Added background gradient */
     color: #333;
     line-height: 1.6;
+    min-height: 100vh; /* Ensure body takes at least full viewport height */
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack children vertically */
 }
 
 .container {
@@ -16,83 +20,95 @@ body {
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Enhanced shadow */
+    flex-grow: 1; /* Allow container to grow and push footer down */
+    margin-top: 0; /* Remove top margin to connect with nav */
 }
 
 header.main-header {
-    background: #007bff;
+    /* background: linear-gradient(to right, #007bff, #0056b3); /* Gradient */
+    background-color: #004085; /* Deep Blue */
     color: #fff;
-    padding: 1rem 0;
+    padding: 1.5rem 0; /* Increased padding */
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 0; /* Remove bottom margin to connect with nav */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Added shadow */
 }
 
 header.main-header h1 {
     margin: 0;
-    font-size: 2em;
+    font-size: 2.2em; /* Slightly larger font */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1); /* Added text shadow */
 }
 
 nav.main-nav {
-    background: #343a40;
+    background-color: #004085; /* Deep Blue */
     color: #fff;
-    padding: 0.75rem;
-    margin-bottom: 20px;
-    border-radius: 4px;
+    padding: 1rem; /* Increased padding */
+    margin-bottom: 0; /* Remove bottom margin to connect with container */
+    margin-top: 0; /* Remove top margin to connect with header */
+    /* border-radius: 5px; /* Slightly larger border-radius */ /* Removed border-radius for connection */
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Added shadow */
 }
 
 nav.main-nav span {
-    margin-right: 15px;
+    margin-right: 20px; /* Increased margin */
+    font-weight: 500;
 }
 
 nav.main-nav a {
     color: #fff;
     text-decoration: none;
-    margin-left: 15px;
-    padding: 5px 10px;
+    margin-left: 20px; /* Increased margin */
+    padding: 8px 15px; /* Increased padding */
     border-radius: 4px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.1s ease; /* Added transform transition */
 }
 
 nav.main-nav a:hover {
-    background-color: #007bff;
+    background-color: #0056b3; /* Darker hover color */
+    transform: translateY(-2px); /* Slight lift effect */
 }
 
 .login-container {
     width: 100%;
-    max-width: 400px;
-    margin: 50px auto;
-    padding: 30px;
+    max-width: 450px; /* Slightly wider */
+    margin: 60px auto; /* Increased margin */
+    padding: 35px; /* Increased padding */
     background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 10px; /* Larger border-radius */
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15); /* Enhanced shadow */
+    flex-grow: 1; /* Allow login container to grow and push footer down */
 }
 
 .form, .incident-form-section, .incident-list-section {
     background: #fff;
-    padding: 25px;
-    margin-bottom: 25px;
-    border-radius: 5px;
-    border: 1px solid #e0e0e0;
+    padding: 30px; /* Increased padding */
+    margin-bottom: 30px; /* Increased margin */
+    border-radius: 8px; /* Larger border-radius */
+    border: 1px solid #dcdcdc; /* Lighter border */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* Added shadow */
 }
 
 .form h2, .incident-form-section h3, .incident-list-section h3 {
     margin-top: 0;
     color: #007bff;
     border-bottom: 2px solid #007bff;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    padding-bottom: 12px; /* Increased padding */
+    margin-bottom: 25px; /* Increased margin */
+    font-weight: 600;
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 22px; /* Increased margin */
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 10px; /* Increased margin */
     font-weight: 600;
     color: #555;
 }
@@ -103,15 +119,26 @@ nav.main-nav a:hover {
 .form-group textarea,
 .form-group select {
     width: 100%;
-    padding: 12px;
+    padding: 14px; /* Increased padding */
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
     font-size: 1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Added transitions */
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus,
+.form-group input[type="datetime-local"]:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25); /* Added focus shadow */
+    outline: none;
 }
 
 .form-group textarea {
-    min-height: 100px;
+    min-height: 120px; /* Increased min-height */
     resize: vertical;
 }
 
@@ -125,11 +152,13 @@ nav.main-nav a:hover {
     cursor: pointer;
     text-decoration: none;
     font-size: 1em;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.1s ease; /* Added transform transition */
+    font-weight: 500;
 }
 
 .btn:hover {
     background: #0056b3;
+    transform: translateY(-2px); /* Slight lift effect */
 }
 
 .btn-danger {
@@ -138,6 +167,22 @@ nav.main-nav a:hover {
 
 .btn-danger:hover {
     background: #c82333;
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.btn-secondary { /* Added style for secondary button */
+    background: #6c757d;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.btn-sm { /* Added style for small buttons */
+    padding: 8px 12px;
+    font-size: 0.9em;
 }
 
 .incident-list {
@@ -146,33 +191,45 @@ nav.main-nav a:hover {
 }
 
 .incident-item {
-    background: #f9f9f9;
-    padding: 20px;
-    margin-bottom: 15px;
+    background: #fefefe; /* Lighter background */
+    padding: 25px; /* Increased padding */
+    margin-bottom: 20px; /* Increased margin */
     border: 1px solid #e0e0e0;
-    border-left: 5px solid #007bff;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border-left: 6px solid #007bff; /* Thicker border */
+    border-radius: 6px; /* Larger border-radius */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06); /* Enhanced shadow */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Added transitions */
+}
+
+.incident-item:hover {
+    transform: translateY(-3px); /* Lift effect on hover */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Enhanced shadow on hover */
 }
 
 .incident-item h4 {
     margin-top: 0;
-    margin-bottom: 10px;
+    margin-bottom: 12px; /* Increased margin */
     color: #333;
+    font-size: 1.2em;
 }
 
 .incident-item p {
-    margin: 8px 0;
+    margin: 10px 0; /* Increased margin */
     font-size: 0.95em;
 }
 .incident-item .meta {
     font-size: 0.85em;
     color: #777;
+    margin-bottom: 5px; /* Added margin */
 }
 
-.incident-item form { /* Für Löschen-Button */
+.incident-actions { /* Container for buttons */
+    margin-top: 15px;
+}
+
+.incident-actions form { /* For buttons */
     display: inline-block;
-    margin-top: 10px;
+    margin-right: 10px; /* Space between buttons */
 }
 
 .alert {
@@ -198,9 +255,9 @@ nav.main-nav a:hover {
 /* Partials */
 footer.main-footer {
     text-align: center;
-    padding: 20px;
-    margin-top: 30px;
-    background-color: #343a40;
+    padding: 25px; /* Increased padding */
+    margin-top: 40px; /* Increased margin */
+    background-color: #004085; /* Deep Blue */
     color: #fff;
     font-size: 0.9em;
 }
